@@ -1,12 +1,7 @@
-from flask import Flask
+"""App entry point."""
+from application import create_app
 
-app = Flask(__name__)
+app = create_app()
 
-
-@app.route('/', methods=['GET'])
-def index():
-    return 'Hello World!'
-
-
-if __name__ == '__main__':
+if __name__ == "__main__":
     app.run(host='0.0.0.0', debug=True)
