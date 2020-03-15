@@ -2,6 +2,20 @@
 
 기간 : 2020.03.10~2020.03.16
 
+## Run
+
+```
+$ python app/main.py
+```
+
+## Test
+
+```
+$ PYTHONPATH=app pytest tests
+```
+
+## API Recipe
+
 1. **GET** /company/
 
    > parameter: name
@@ -20,7 +34,7 @@
      ]
      ```
 
-2) **GET** /company/tag/
+2) **GET** /tag/
 
    > parameter: tag
 
@@ -28,7 +42,7 @@
    - 태그로 검색 관련된 회사가 검색되어야 합니다.
      - 다국어로 검색이 가능.
      - 동일한 회사는 한번만 노출(distinct)
-   - ex) /company/tag?tag=タグ\_6
+   - ex) /tag/?tag=タグ\_6
      ```
      [
        {
@@ -61,19 +75,18 @@
      ]
      ```
 
-3) **POST** /company/tag/
+3) **POST** /company/<int:company_id>/
 
-   > data: tag(int), comapny(int)
+   > data: tag(int)
 
    - 회사 태그 정보 추가
    - 태그 id 값을 데이터로 받아와야한다.
      - 태그 테이블에 존재하는 태그만 추가가 가능.
-   - ex) /company/tag/
+   - ex) /company/3/
      ```
      # 데이터
      data = {
-       "tag": "17",
-       "company": "3"
+       "tag": "17"
      }
      # 결과 dataset
      {
@@ -91,18 +104,17 @@
      }
      ```
 
-4) **DELETE** /company/tag/
+4) **DELETE** /company/<int:company_id>/
 
-   > data: tag(int), company(int)
+   > data: tag(int)
 
    - 회사 태그 정보 삭제
    - 태그 id 값을 데이터로 받아와야한다.
-   - ex) /company/tag/
+   - ex) /company/3/
      ```
      # 데이터
      data = {
-       "tag": "1",
-       "company": "3"
+       "tag": "1"
      }
      # 결과 dataset
      Deleted

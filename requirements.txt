@@ -5,3 +5,5 @@ environs
 sqlalchemy-utils
 flask-restplus
 werkzeug==0.16.1
+pytest
+pymysql
