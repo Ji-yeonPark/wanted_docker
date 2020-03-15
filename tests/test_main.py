@@ -35,3 +35,23 @@ def test_search_tag(client):
     response = client.get('/company/tag/?tag=タグ_')
     result = json.loads(response.data.decode())
     assert len(result) > 0
+
+
+def test_add_tags_to_company(client):
+    """ 회사에 태그 추가 """
+    url = '/company/tag/'
+    response = client.post(url, json={'tag': 17, 'company': 3})
+    assert response.status_code == 201
+
+
+def test_delete_tags_to_company(client):
+    """ 회사 태그 삭제 """
+
+    # 없는 태그 삭제
+    url = '/company/tag/'
+    response = client.delete(url, json={'tag': 17, 'company': 3})
+    assert response.status_code == 404
+
+    # 있는 태그 삭제
+    response = client.delete(url, json={'tag': 1, 'company': 3})
+    assert response.status_code == 200
