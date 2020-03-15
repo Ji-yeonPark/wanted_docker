@@ -1,0 +1,7 @@
+flask
+flask-sqlalchemy
+mysqlclient
+environs
+sqlalchemy-utils
+flask-restplus
+werkzeug==0.16.1
