@@ -99,13 +99,9 @@ class CompanyTagMapView(Resource):
         )
         db.session.add(new_data)
         db.session.commit()
-
-        print(new_data)
-
         return new_data, 201
 
     @ns_company.doc('delete tag from company')
-    @ns_company.marshal_with(model_company_tag_map, 200)
     def delete(self):
         # 회사에 태그 정보 삭제
         if not api.payload:
@@ -124,7 +120,7 @@ class CompanyTagMapView(Resource):
         except:
             return 'Cannot found.', 404
         else:
-            return '', 200
+            return 'Deleted', 200
 
 
 @ns_tag.route("/")
