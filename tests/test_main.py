@@ -1,13 +1,23 @@
-from main import app
-
-client = app.test_client()
+import json
 
 
-def test_index():
-    response = client.get('/')
+def test_search_company(client):
+    # 전체 검색
+    response = client.get('/company/')
     assert response.status_code == 200
 
+    # (한글)단어 검색
+    response = client.get('/company/?name=원')  # 원티드 1개 존재
+    assert response.status_code == 200
+    result = json.loads(response.data.decode())
+    assert len(result) == 1
 
-def test_404():
-    response = client.get('/this_page_would_not_be_exist')
-    assert response.status_code == 404
+    # (영어)단어 검색
+    response = client.get('/company/?name=dat')  # dat 포함하는 단어 2개 존재
+    result = json.loads(response.data.decode())
+    assert len(result) == 2
+
+    # 없는 단어 검색
+    response = client.get('/company/?name=가나다')
+    result = json.loads(response.data.decode())
+    assert len(result) == 0
