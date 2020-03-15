@@ -1,5 +1,6 @@
 from flask import current_app as app
 from flask_restplus import Api, fields, reqparse, Resource
+from sqlalchemy import or_
 from .models import db, Company, Tags, Company_Tags_Map
 
 api = Api(app, version='1.0', title='Wanted API',
@@ -36,12 +37,12 @@ class CompanyView(Resource):
 
         # 검색어가 존제하는 경우 -> 조건 검색
         if args and args.get('name'):
-            search - f"%{args['name']}%"  # %검색어%
+            search = f"%{args['name']}%"  # %검색어%
             return Company.query.filter(or_(
                 Company.name_ko.like(search),
                 Company.name_en.like(search),
                 Company.name_ja.like(search)
-            )).all()
+            )).distinct(Company.id).all()
 
         # 검색어가 없는 경우 -> 전체 검색
         return Company.query.all()
