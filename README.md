@@ -10,6 +10,8 @@ $ python app/main.py
 
 ## Test
 
+테스트를 실행하면, 데이터베이스에 데이터가 자동으로 넣어집니다.
+
 ```
 $ PYTHONPATH=app pytest tests
 ```
