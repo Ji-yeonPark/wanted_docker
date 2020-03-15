@@ -57,12 +57,58 @@ class CompanyView(Resource):
         return Company.query.all()
 
 
-@ns_company.route("/tag/")
+@ns_company.route("/tag/<int:company_id>")
 class CompanyTagMapView(Resource):
     """Company & Tags Map View"""
 
-    @ns_company.doc('add tag to comapny')
+    @ns_company.doc('add tag to company')
     @ns_company.marshal_with(model_company_tag_map, 201)
+    def post(self, company_id):
+        """ 회사에 태그 정보 추가 """
+        if not api.payload:
+            return '', 404
+
+        tag = api.payload.get('tag')  # id<int>
+
+        if not tag:
+            return '', 404
+
+        # 회사 - 태그 추가
+        new_data = Company_Tags_Map(
+            tag_id=tag,
+            company_id=company_id
+        )
+        db.session.add(new_data)
+        db.session.commit()
+        return new_data, 201
+
+    @ns_company.doc('delete tag from company')
+    def delete(self, company_id):
+        # 회사에 태그 정보 삭제
+        if not api.payload:
+            return '', 404
+        tag = api.payload.get('tag')  # id<int>
+
+        if not tag:
+            return '', 404
+
+        try:
+            obj = Company_Tags_Map.query.filter(
+                and_(Company_Tags_Map.tag_id == tag, Company_Tags_Map.company_id == company_id)).one()
+            db.session.delete(obj)
+            db.session.commit()
+        except:
+            return 'Cannot found.', 404
+        else:
+            return 'Deleted', 200
+
+
+@ns_tag.route("/")
+class TagView(Resource):
+    """Tags View"""
+
+    @ns_tag.doc('add tag to comapny')
+    @ns_tag.marshal_with(model_company_tag_map, 201)
     def get(self):
         """ 태그를 포함하는 회사 검색 """
         parser.add_argument('tag')
@@ -78,54 +124,6 @@ class CompanyTagMapView(Resource):
 
         # 검색어가 없는 경우 -> []
         return [], 200
-
-    @ns_company.doc('add tag to company')
-    @ns_company.marshal_with(model_company_tag_map, 201)
-    def post(self):
-        """ 회사에 태그 정보 추가 """
-        if not api.payload:
-            return '', 404
-
-        tag = api.payload.get('tag')  # id<int>
-        company = api.payload.get('company')  # id<int>
-
-        if not tag or not company:
-            return '', 404
-
-        # 회사 - 태그 추가
-        new_data = Company_Tags_Map(
-            tag_id=tag,
-            company_id=company
-        )
-        db.session.add(new_data)
-        db.session.commit()
-        return new_data, 201
-
-    @ns_company.doc('delete tag from company')
-    def delete(self):
-        # 회사에 태그 정보 삭제
-        if not api.payload:
-            return '', 404
-        tag = api.payload.get('tag')  # id<int>
-        company = api.payload.get('company')  # id<int>
-
-        if not tag or not company:
-            return '', 404
-
-        try:
-            obj = Company_Tags_Map.query.filter(
-                and_(Company_Tags_Map.tag_id == tag, Company_Tags_Map.company_id == company)).one()
-            db.session.delete(obj)
-            db.session.commit()
-        except:
-            return 'Cannot found.', 404
-        else:
-            return 'Deleted', 200
-
-
-@ns_tag.route("/")
-class TagView(Resource):
-    """Tags View"""
 
     @ns_tag.doc('create tag')
     @ns_tag.expect(model_tag)
