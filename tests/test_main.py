@@ -21,3 +21,17 @@ def test_search_company(client):
     response = client.get('/company/?name=가나다')
     result = json.loads(response.data.decode())
     assert len(result) == 0
+
+
+def test_search_tag(client):
+    """ 태그 검색 """
+
+    # (한글)단어 검색
+    response = client.get('/company/tag/?tag=태그_12')
+    result = json.loads(response.data.decode())
+    assert len(result) == 6
+
+    # (일어)단어 검색
+    response = client.get('/company/tag/?tag=タグ_')
+    result = json.loads(response.data.decode())
+    assert len(result) > 0

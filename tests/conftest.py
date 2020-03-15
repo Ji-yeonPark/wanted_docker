@@ -36,5 +36,6 @@ def client():
         db.create_all()
         load_model_fixtures(db, Company, 'company.csv')
         load_model_fixtures(db, Tags, 'tags.csv')
+        load_model_fixtures(db, Company_Tags_Map, 'company_tags_map.csv')
 
         yield client
