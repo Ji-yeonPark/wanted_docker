@@ -4,6 +4,6 @@ mysqlclient
 environs
 sqlalchemy-utils
 flask-restplus
-werkzeug==0.16.1
+werkzeug==2.2.3
 pytest
 pymysql
